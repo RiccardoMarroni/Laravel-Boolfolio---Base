@@ -24,5 +24,12 @@ $fa-font-path: "../fonts/webfonts" !default;
     #wrapper{
         background-color: red;
         flex-grow: 1;
+
+         header{
+
+            min-height: 70px;
+            background-color: green;
+
+        }
     }
 }

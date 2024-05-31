@@ -25,7 +25,9 @@
 
         </div>
         <div id="wrapper">
-        
+            <header>
+                
+            </header>
             <main class="">
                 @yield('content')
             </main>
