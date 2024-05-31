@@ -9,6 +9,20 @@ $fa-font-path: "../fonts/webfonts" !default;
 
 @import '~bootstrap/scss/bootstrap';
 
-h1 {
-    color: $text-color;
+#admin{
+    height: 100vh;
+    overflow:hidden;
+    display: flex;
+
+    
+
+    #sidebar{
+        width: 300px;
+        background-color: lightblue;
+    }
+
+    #wrapper{
+        background-color: red;
+        flex-grow: 1;
+    }
 }
