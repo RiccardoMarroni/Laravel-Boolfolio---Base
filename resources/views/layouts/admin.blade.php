@@ -21,13 +21,9 @@
 
 <body>
     <div id="admin">
-        <div id="sidebar">
-
-        </div>
+        @include('partials.sidebar')
         <div id="wrapper">
-            <header>
-                
-            </header>
+            @include('partials.header')
             <main class="">
                 @yield('content')
             </main>
