@@ -15,11 +15,10 @@ class Post extends Model
     {
         $slug = Str::slug($title, '-');
         $count = 1;
-        while(Post::where('slug', $slug)->first){
-            $slug =Str::of($title)->slug('-') . "-{$count}" ;
+        while (Post::where('slug', $slug)->first()) {
+            $slug = Str::of($title)->slug('-') . "-{$count}";
             $count++;
         }
         return $slug;
     }
-   
 }
