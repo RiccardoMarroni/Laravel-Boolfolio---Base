@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 
-//use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 
 class PostController extends Controller
@@ -19,7 +20,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        //$posts = Post::all();
+        $posts = Post::paginate(3);
         //dd($posts);
         return view('admin.posts.index', compact('posts'));
     }
@@ -39,6 +41,23 @@ class PostController extends Controller
     {
         $form_data = $request->validated();
         $form_data['slug'] = Post::generateSlug($form_data['title']);
+        if ($request->hasFile('image')) {
+            //dd($request->image);
+            $name = $request->image->getClientOriginalName(); //o il nome che volete dare al file
+            // $path = $request->file('image')->storeAs(
+            //     'post_images',
+            //      $name
+            // );
+
+            //dd($name);
+            $path = Storage::putFileAs('post_images', $request->image, $name);
+            //$path = Storage::put('post_images', $request->image);
+            $form_data['image'] = $path;
+        }
+        //dd($path);// post_images/nomefile.png
+
+
+
         $newPost = Post::create($form_data);
         return redirect()->route('admin.posts.show', $newPost->slug);
 
@@ -70,9 +89,18 @@ class PostController extends Controller
         if ($post->title !== $form_data['title']) {
             $form_data['slug'] = Post::generateSlug($form_data['title']);
         }
+        if ($request->hasFile('image')) {
+            if ($post->image) {
+                Storage::delete($post->image);
+            }
+            $name = $request->image->getClientOriginalName();
+            //dd($name);
+            $path = Storage::putFileAs('post_images', $request->image, $name);
+            $form_data['image'] = $path;
+        }
         // DB::enableQueryLog();
         $post->update($form_data);
-        //$query = DB::getQueryLog();
+        // $query = DB::getQueryLog();
         // dd($query);
         return redirect()->route('admin.posts.show', $post->slug);
     }
@@ -82,6 +110,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        if ($post->image) {
+            Storage::delete($post->image);
+        }
         $post->delete();
         return redirect()->route('admin.posts.index')->with('message', $post->title . ' è stato eliminato');
     }
